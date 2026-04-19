@@ -20,7 +20,7 @@ Option.init({
 }, {
   sequelize,
   modelName: 'Option',
-  tableName: 'options'
+  tableName: 'denis_options'
 });
 
 export default Option;

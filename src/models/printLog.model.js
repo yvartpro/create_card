@@ -25,7 +25,7 @@ PrintLog.init({
 }, {
   sequelize,
   modelName: 'PrintLog',
-  tableName: 'print_logs',
+  tableName: 'denis_print_logs',
   timestamps: false
 });
 

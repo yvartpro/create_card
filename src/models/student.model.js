@@ -65,7 +65,7 @@ Student.init({
 }, {
   sequelize,
   modelName: 'Student',
-  tableName: 'students'
+  tableName: 'denis_students'
 });
 
 export default Student;

@@ -40,7 +40,7 @@ Card.init({
 }, {
   sequelize,
   modelName: 'Card',
-  tableName: 'cards'
+  tableName: 'denis_cards'
 });
 
 export default Card;

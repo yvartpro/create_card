@@ -41,7 +41,7 @@ School.init({
 }, {
   sequelize,
   modelName: 'School',
-  tableName: 'schools'
+  tableName: 'denis_schools'
 });
 
 export default School;

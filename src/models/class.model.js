@@ -24,7 +24,7 @@ Class.init({
 }, {
   sequelize,
   modelName: 'Class',
-  tableName: 'classes'
+  tableName: 'denis_classes'
 });
 
 export default Class;

@@ -56,7 +56,7 @@ Staff.init({
 }, {
   sequelize,
   modelName: 'Staff',
-  tableName: 'staff'
+  tableName: 'denis_staff'
 });
 
 export default Staff;
