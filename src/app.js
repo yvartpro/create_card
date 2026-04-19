@@ -9,7 +9,6 @@ import 'express-async-errors';
 
 import routes from './routes/index.js';
 import { errorHandler, notFound } from './middlewares/error.middleware.js';
-import { sequelize } from './models/index.js';
 
 dotenv.config();
 
@@ -26,10 +25,10 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 // Static folder for uploads
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+app.use('/denis/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // Routes
-app.use('/api', routes);
+app.use('/denis/api', routes);
 
 // Error Middlewares
 app.use(notFound);
