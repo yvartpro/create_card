@@ -7,7 +7,7 @@ const seedAdmin = async () => {
   try {
     await sequelize.authenticate();
     console.log('Database connected.');
-    
+
     // Ensure schemas are created
     await sequelize.sync();
 

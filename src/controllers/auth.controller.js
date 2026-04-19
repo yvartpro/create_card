@@ -24,11 +24,13 @@ export const login = async (req, res) => {
   const token = generateToken(user.id);
 
   successResponse(res, 200, 'Login successful', {
-    id: user.id,
-    name: user.name,
-    email: user.email,
-    role: user.role,
-    token
+    user: {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    },
+    token: token
   });
 };
 
