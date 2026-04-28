@@ -59,3 +59,11 @@ export const register = async (req, res) => {
     token
   });
 };
+
+export const logout = async (req, res) => {
+  res.cookie('token', '', {
+    httpOnly: true,
+    expires: new Date(0),
+  });
+  successResponse(res, 200, 'Logout successful');
+};
