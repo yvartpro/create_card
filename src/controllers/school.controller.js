@@ -22,7 +22,11 @@ export const getSchools = async (req, res) => {
   // We will return all schools for the admin.
   let where = {};
   if (req.user.role !== 'ADMIN') {
-    where.owner_id = req.user.id;
+    if (req.user.school_id) {
+      where.id = req.user.school_id;
+    } else {
+      where.owner_id = req.user.id;
+    }
   }
   
   const schools = await School.findAll({ where });

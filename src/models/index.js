@@ -12,6 +12,10 @@ import sequelize from '../config/database.js';
 School.belongsTo(User, { foreignKey: 'owner_id', as: 'owner' });
 User.hasMany(School, { foreignKey: 'owner_id', as: 'schools' });
 
+// User belongsTo School (for operators)
+User.belongsTo(School, { foreignKey: 'school_id', as: 'school' });
+School.hasMany(User, { foreignKey: 'school_id', as: 'operators' });
+
 // Option belongsTo School
 Option.belongsTo(School, { foreignKey: 'school_id', as: 'school' });
 School.hasMany(Option, { foreignKey: 'school_id', as: 'options' });

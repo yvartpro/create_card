@@ -33,6 +33,10 @@ User.init({
   role: {
     type: DataTypes.ENUM('ADMIN', 'OPERATOR'),
     defaultValue: 'OPERATOR'
+  },
+  school_id: {
+    type: DataTypes.INTEGER,
+    allowNull: true
   }
 }, {
   sequelize,
