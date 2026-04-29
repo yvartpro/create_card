@@ -6,6 +6,11 @@ export const createStudent = async (req, res) => {
   successResponse(res, 201, 'Student created', student);
 };
 
+export const bulkCreateStudents = async (req, res) => {
+  const students = await Student.bulkCreate(req.body, { validate: true });
+  successResponse(res, 201, 'Students created', students);
+};
+
 export const getStudents = async (req, res) => {
   const { school_id, class_id } = req.query;
   const where = {};
