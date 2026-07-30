@@ -4,16 +4,17 @@ import { protect, adminOnly } from '../middlewares/auth.middleware.js';
 
 const router = express.Router();
 
+// Apply auth middleware to all routes
 router.use(protect);
 router.use(adminOnly);
 
-router.route('/')
-  .post(createOperator)
-  .get(getOperators);
+// Collection routes
+router.get('/', getOperators);
+router.post('/', createOperator);
 
-router.route('/:id')
-  .get(getOperatorById)
-  .patch(updateOperator)
-  .delete(deleteOperator);
+// Individual resource routes
+router.get('/:id', getOperatorById);
+router.patch('/:id', updateOperator);
+router.delete('/:id', deleteOperator);
 
 export default router;

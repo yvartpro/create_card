@@ -18,8 +18,6 @@ export const createSchool = async (req, res) => {
 };
 
 export const getSchools = async (req, res) => {
-  // If operator, maybe they only see schools they belong to. But prompt says admin users manage multiple schools.
-  // We will return all schools for the admin.
   let where = {};
   if (req.user.role !== 'ADMIN') {
     if (req.user.school_id) {
