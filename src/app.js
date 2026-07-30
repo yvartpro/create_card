@@ -25,10 +25,10 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 // Static folder for uploads
-app.use('/denis/uploads', express.static(path.join(__dirname, '../uploads')));
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // Routes
-app.use('/denis/api', routes);
+app.use('/api', routes);
 
 // Error Middlewares
 app.use(notFound);
