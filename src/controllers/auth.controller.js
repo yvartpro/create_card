@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { User } from '../models/index.js';
-import { successResponse, errorResponse } from '../utils/response.js';
+import { apiResponse } from '../utils/response.js';
 
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -12,18 +12,18 @@ export const login = async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return errorResponse(res, 400, 'Please provide email and password');
+    return apiResponse(res, 400, 'Please provide email and password');
   }
 
   const user = await User.findOne({ where: { email } });
 
   if (!user || !(await user.comparePassword(password))) {
-    return errorResponse(res, 401, 'Invalid credentials');
+    return apiResponse(res, 401, 'Invalid credentials');
   }
 
   const token = generateToken(user.id);
 
-  successResponse(res, 200, 'Login successful', {
+  apiResponse(res, 200, 'Login successful', {
     user: {
       id: user.id,
       name: user.name,
@@ -39,7 +39,7 @@ export const register = async (req, res) => {
 
   const userExists = await User.findOne({ where: { email } });
   if (userExists) {
-    return errorResponse(res, 400, 'User already exists');
+    return apiResponse(res, 400, 'User already exists');
   }
 
   const user = await User.create({
@@ -51,7 +51,7 @@ export const register = async (req, res) => {
 
   const token = generateToken(user.id);
 
-  successResponse(res, 201, 'User registered', {
+  apiResponse(res, 201, 'User registered', {
     id: user.id,
     name: user.name,
     email: user.email,
@@ -65,5 +65,5 @@ export const logout = async (req, res) => {
     httpOnly: true,
     expires: new Date(0),
   });
-  successResponse(res, 200, 'Logout successful');
+  apiResponse(res, 200, 'Logout successful');
 };

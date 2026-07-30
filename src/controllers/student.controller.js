@@ -1,14 +1,14 @@
 import { Student, Class, School } from '../models/index.js';
-import { successResponse, errorResponse } from '../utils/response.js';
+import { apiResponse } from '../utils/response.js';
 
 export const createStudent = async (req, res) => {
   const student = await Student.create(req.body);
-  successResponse(res, 201, 'Student created', student);
+  apiResponse(res, 201, 'Student created', student);
 };
 
 export const bulkCreateStudents = async (req, res) => {
   const students = await Student.bulkCreate(req.body, { validate: true });
-  successResponse(res, 201, 'Students created', students);
+  apiResponse(res, 201, 'Students created', students);
 };
 
 export const getStudents = async (req, res) => {
@@ -21,29 +21,29 @@ export const getStudents = async (req, res) => {
     where,
     include: [{ model: Class, as: 'class' }, { model: School, as: 'school' }]
   });
-  successResponse(res, 200, 'Students retrieved', students);
+  apiResponse(res, 200, 'Students retrieved', students);
 };
 
 export const getStudentById = async (req, res) => {
   const student = await Student.findByPk(req.params.id, {
     include: [{ model: Class, as: 'class' }]
   });
-  if (!student) return errorResponse(res, 404, 'Student not found');
-  successResponse(res, 200, 'Student retrieved', student);
+  if (!student) return apiResponse(res, 404, 'Student not found');
+  apiResponse(res, 200, 'Student retrieved', student);
 };
 
 export const updateStudent = async (req, res) => {
   const student = await Student.findByPk(req.params.id);
-  if (!student) return errorResponse(res, 404, 'Student not found');
+  if (!student) return apiResponse(res, 404, 'Student not found');
 
   await student.update(req.body);
-  successResponse(res, 200, 'Student updated', student);
+  apiResponse(res, 200, 'Student updated', student);
 };
 
 export const deleteStudent = async (req, res) => {
   const student = await Student.findByPk(req.params.id);
-  if (!student) return errorResponse(res, 404, 'Student not found');
+  if (!student) return apiResponse(res, 404, 'Student not found');
 
   await student.destroy();
-  successResponse(res, 200, 'Student deleted');
+  apiResponse(res, 200, 'Student deleted');
 };

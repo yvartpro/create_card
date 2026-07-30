@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { User } from '../models/index.js';
-import { errorResponse } from '../utils/response.js';
+import { apiResponse } from '../utils/response.js';
 
 export const protect = async (req, res, next) => {
   let token;
@@ -10,7 +10,7 @@ export const protect = async (req, res, next) => {
   }
 
   if (!token) {
-    return errorResponse(res, 401, 'Not authorized, no token provided');
+    return apiResponse(res, 401, 'Not authorized, no token provided');
   }
 
   try {
@@ -18,12 +18,12 @@ export const protect = async (req, res, next) => {
     req.user = await User.findByPk(decoded.id);
     
     if (!req.user) {
-      return errorResponse(res, 401, 'Not authorized, user not found');
+      return apiResponse(res, 401, 'Not authorized, user not found');
     }
     
     next();
   } catch (error) {
-    return errorResponse(res, 401, 'Not authorized, token failed');
+    return apiResponse(res, 401, 'Not authorized, token failed');
   }
 };
 
@@ -31,6 +31,6 @@ export const adminOnly = (req, res, next) => {
   if (req.user && req.user.role === 'ADMIN') {
     next();
   } else {
-    return errorResponse(res, 403, 'Not authorized as an admin');
+    return apiResponse(res, 403, 'Not authorized as an admin');
   }
 };

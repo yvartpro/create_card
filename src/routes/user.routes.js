@@ -13,7 +13,7 @@ router.route('/')
 
 router.route('/:id')
   .get(getOperatorById)
-  .put(updateOperator)
+  .patch(updateOperator)
   .delete(deleteOperator);
 
 export default router;
