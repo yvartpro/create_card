@@ -39,12 +39,19 @@ export const updateOperator = async (req, res) => {
   const operator = await User.findOne({
     where: { id: req.params.id, role: 'OPERATOR' }
   });
-  if (!operator) return apiResponse(res, 404, 'Operator not found');
+  if (!operator) return errorResponse(res, 404, 'Operator not found');
 
   if (req.body.password === '') delete req.body.password;
 
   await operator.update(req.body);
-  apiResponse(res, 200, 'Operator updated', operator);
+
+  // Reload to get associations
+  const updatedOperator = await User.findOne({
+    where: { id: operator.id },
+    include: [{ model: School, as: 'school' }]
+  });
+  
+  apiResponse(res, 200, 'Operator updated', updatedOperator);
 };
 
 export const deleteOperator = async (req, res) => {
