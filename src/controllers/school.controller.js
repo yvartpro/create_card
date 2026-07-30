@@ -19,20 +19,16 @@ export const createSchool = async (req, res) => {
 
 export const getSchools = async (req, res) => {
   let where = {};
-  console.log('GET_SCHOOLS User:', { id: req.user.id, role: req.user.role, school_id: req.user.school_id });
 
   if (req.user.role !== 'ADMIN') {
     if (req.user.school_id) {
       where.id = req.user.school_id;
-      console.log('Filtering by school_id:', req.user.school_id);
     } else {
       where.owner_id = req.user.id;
-      console.log('Filtering by owner_id:', req.user.id);
     }
   }
   
   const schools = await School.findAll({ where });
-  console.log(`Found ${schools.length} schools`);
   apiResponse(res, 200, 'Schools retrieved', schools);
 };
 

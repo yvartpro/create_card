@@ -21,7 +21,6 @@ export const protect = async (req, res, next) => {
       return apiResponse(res, 401, 'Not authorized, user not found');
     }
     
-    console.log(`AUTH_SUCCESS: ${req.user.name} (${req.user.role}) - school_id: ${req.user.school_id}`);
     next();
   } catch (error) {
     return apiResponse(res, 401, 'Not authorized, token failed');
