@@ -10,7 +10,7 @@ router.route('/')
 
 router.route('/:id')
   .get(protect, getOptionById)
-  .put(protect, adminOnly, updateOption)
+  .patch(protect, adminOnly, updateOption)
   .delete(protect, adminOnly, deleteOption);
 
 export default router;

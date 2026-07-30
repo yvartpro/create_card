@@ -1,4 +1,4 @@
-import { errorResponse } from '../utils/response.js';
+import { apiResponse } from '../utils/response.js';
 
 export const errorHandler = (err, req, res, next) => {
   console.error(err.stack);
@@ -6,21 +6,14 @@ export const errorHandler = (err, req, res, next) => {
   let statusCode = res.statusCode === 200 ? 500 : res.statusCode;
   let message = err.message || 'Internal Server Error';
 
-  if (err.name === 'SequelizeValidationError') {
+  if (err.name === 'SequelizeValidationError' || err.name === 'SequelizeUniqueConstraintError') {
     statusCode = 400;
-    message = 'Validation Error';
-    const errors = err.errors.map(e => e.message);
-    return errorResponse(res, statusCode, message, errors);
+    // Combine all validation errors into the message string
+    message = err.errors.map(e => e.message).join(', ');
+    return apiResponse(res, statusCode, message);
   }
 
-  if (err.name === 'SequelizeUniqueConstraintError') {
-    statusCode = 400;
-    message = 'Duplicate field value entered';
-    const errors = err.errors.map(e => e.message);
-    return errorResponse(res, statusCode, message, errors);
-  }
-
-  return errorResponse(res, statusCode, message, process.env.NODE_ENV === 'development' ? err.stack : null);
+  return apiResponse(res, statusCode, message);
 };
 
 export const notFound = (req, res, next) => {

@@ -10,7 +10,7 @@ router.route('/')
 
 router.route('/:id')
   .get(protect, getStaffById)
-  .put(protect, updateStaff)
+  .patch(protect, updateStaff)
   .delete(protect, adminOnly, deleteStaff);
 
 export default router;

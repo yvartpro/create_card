@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { Card, Student, Staff, School, Class, PrintLog } from '../models/index.js';
-import { successResponse, errorResponse } from '../utils/response.js';
+import { apiResponse } from '../utils/response.js';
 import { generateCardPDF } from '../services/pdf/card.service.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -12,11 +12,11 @@ export const generateCard = async (req, res) => {
   const { type, student_id, staff_id, school_id } = req.body;
 
   if (!type || !school_id) {
-    return errorResponse(res, 400, 'Type and school_id are required');
+    return apiResponse(res, 400, 'Type and school_id are required');
   }
 
   const school = await School.findByPk(school_id);
-  if (!school) return errorResponse(res, 404, 'School not found');
+  if (!school) return apiResponse(res, 404, 'School not found');
 
   let entity = null;
   let cardData = {
@@ -29,7 +29,7 @@ export const generateCard = async (req, res) => {
     entity = await Student.findByPk(student_id, {
       include: [{ model: Class, as: 'class' }]
     });
-    if (!entity) return errorResponse(res, 404, 'Student not found');
+    if (!entity) return apiResponse(res, 404, 'Student not found');
     
     cardData = {
       ...cardData,
@@ -42,7 +42,7 @@ export const generateCard = async (req, res) => {
     };
   } else {
     entity = await Staff.findByPk(staff_id);
-    if (!entity) return errorResponse(res, 404, 'Staff not found');
+    if (!entity) return apiResponse(res, 404, 'Staff not found');
 
     cardData = {
       ...cardData,
@@ -79,21 +79,21 @@ export const generateCard = async (req, res) => {
     });
 
     // Return the response
-    successResponse(res, 201, 'Card generated successfully', card);
+    apiResponse(res, 201, 'Card generated successfully', card);
   } catch (error) {
     console.error(error);
-    return errorResponse(res, 500, 'Error generating PDF card');
+    return apiResponse(res, 500, 'Error generating PDF card');
   }
 };
 
 export const downloadCard = async (req, res) => {
   const card = await Card.findByPk(req.params.id);
-  if (!card) return errorResponse(res, 404, 'Card not found');
+  if (!card) return apiResponse(res, 404, 'Card not found');
 
   const filePath = path.join(__dirname, '../../', card.pdf_url);
   
   if (!fs.existsSync(filePath)) {
-    return errorResponse(res, 404, 'PDF file not found on server');
+    return apiResponse(res, 404, 'PDF file not found on server');
   }
 
   // Update print log
