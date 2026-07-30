@@ -1,266 +1,238 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Ma Carte by Denis - API Documentation</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-<style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
-
-body{
-    font-family:Inter,sans-serif;
-    background:#f5f7fb;
-    color:#1d2939;
-}
-
-header{
-    background:linear-gradient(135deg,#1e3a8a,#2563eb);
-    color:white;
-    padding:70px 25px;
-}
-
-.container{
-    width:min(1200px,92%);
-    margin:auto;
-}
-
-h1{
-    font-size:3rem;
-    margin-bottom:15px;
-}
-
-header p{
-    max-width:700px;
-    line-height:1.7;
-    opacity:.95;
-}
-
-.btns{
-    margin-top:30px;
-    display:flex;
-    gap:15px;
-    flex-wrap:wrap;
-}
-
-.btn{
-    padding:14px 22px;
-    text-decoration:none;
-    border-radius:10px;
-    font-weight:600;
-    transition:.3s;
-}
-
-.primary{
-    background:white;
-    color:#2563eb;
-}
-
-.secondary{
-    border:1px solid rgba(255,255,255,.4);
-    color:white;
-}
-
-.btn:hover{
-    transform:translateY(-2px);
-}
-
-section{
-    padding:70px 0;
-}
-
-.section-title{
-    font-size:2rem;
-    margin-bottom:15px;
-}
-
-.section-text{
-    color:#667085;
-    margin-bottom:40px;
-}
-
-.grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-    gap:25px;
-}
-
-.card{
-    background:white;
-    padding:25px;
-    border-radius:18px;
-    box-shadow:0 12px 30px rgba(0,0,0,.05);
-}
-
-.card h3{
-    margin-bottom:12px;
-}
-
-.card p{
-    color:#667085;
-    line-height:1.6;
-}
-
-.school-card{
-    background:white;
-    padding:20px;
-    border-radius:15px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    box-shadow:0 10px 25px rgba(0,0,0,.05);
-}
-
-.badge{
-    background:#dcfce7;
-    color:#166534;
-    padding:8px 14px;
-    border-radius:20px;
-    font-size:.85rem;
-    font-weight:600;
-}
-
-footer{
-    padding:35px;
-    text-align:center;
-    color:#667085;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ma Carte - Votre Identité Numérique</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0B3C6F',
+                        primaryContainer: '#D6E4F5',
+                        secondary: '#3A7DBA',
+                        secondaryContainer: '#DCEEFF',
+                        tertiary: '#6FA8DC',
+                        background: '#F7F9FC',
+                        surface: '#FFFFFF',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .hero-gradient {
+            background: linear-gradient(135deg, #0B3C6F 0%, #3A7DBA 100%);
+        }
+    </style>
 </head>
+<body class="bg-background text-gray-800">
 
-<body>
-
-<header>
-
-<div class="container">
-
-<h1>Ma Carte by Denis API</h1>
-
-<p>
-Welcome to the official API documentation for <strong>Ma Carte by Denis</strong>.
-This platform enables educational institutions to generate secure student cards
-and professional identification cards for teachers and staff through a centralized API.
-</p>
-
-<div class="btns">
-<a href="#" class="btn primary">Getting Started</a>
-<a href="#" class="btn secondary">API Reference</a>
-</div>
-
-</div>
-
-</header>
-
-<section>
-
-<div class="container">
-
-<h2 class="section-title">Platform Overview</h2>
-
-<p class="section-text">
-Designed to simplify identity card generation, verification, and management for schools and universities.
-</p>
-
-<div class="grid">
-
-<div class="card">
-<h3>🎓 Student Cards</h3>
-<p>
-Generate personalized student identification cards with secure information and institutional branding.
-</p>
-</div>
-
-<div class="card">
-<h3>👨‍🏫 Professional Cards</h3>
-<p>
-Issue professional cards for professors, lecturers, teachers, and administrative staff.
-</p>
-</div>
-
-<div class="card">
-<h3>🔒 Secure API</h3>
-<p>
-Authentication-based API built for educational platforms and management systems.
-</p>
-</div>
-
-<div class="card">
-<h3>⚡ Fast Integration</h3>
-<p>
-RESTful endpoints allowing institutions to automate card generation from their own systems.
-</p>
-</div>
-
-</div>
-
-</div>
-
-</section>
-
-<section>
-
-<div class="container">
-
-<h2 class="section-title">Connected Institutions</h2>
-
-<p class="section-text">
-Example institutions currently connected to the platform.
-</p>
-
-<div id="schools" class="grid"></div>
-
-</div>
-
-</section>
-
-<footer>
-
-<div class="container">
-© 2026 Ma Carte by Denis API • Documentation Portal
-</div>
-
-</footer>
-
-<script>
-
-const schools=[
-"University of Burundi",
-"Hope Africa University",
-"Université du Lac Tanganyika",
-"Ecole Normale Supérieure",
-"Light University",
-"Institut Supérieur de Commerce",
-"International Leadership University",
-"East African Leadership Institute"
-];
-
-const container=document.getElementById("schools");
-
-schools.forEach(name=>{
-    const card=document.createElement("div");
-    card.className="school-card";
-
-    card.innerHTML=`
-        <div>
-            <h3>${name}</h3>
-            <small>Connected Institution</small>
+    <!-- Navigation -->
+    <nav class="bg-surface shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center">
+                    <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center text-white mr-3">
+                        <i class="fas fa-id-card text-xl"></i>
+                    </div>
+                    <span class="text-2xl font-bold text-primary">Ma Carte</span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#features" class="text-gray-600 hover:text-primary font-medium transition">Fonctionnalités</a>
+                    <a href="#about" class="text-gray-600 hover:text-primary font-medium transition">À propos</a>
+                    <a href="#contact" class="text-gray-600 hover:text-primary font-medium transition">Contact</a>
+                </div>
+            </div>
         </div>
+    </nav>
 
-        <div class="badge">
-            Active
+    <!-- Hero Section -->
+    <header class="hero-gradient text-white py-20 lg:py-32 overflow-hidden relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h1 class="text-4xl lg:text-6xl font-extrabold leading-tight mb-6">
+                        Votre identité scolaire, <br><span class="text-tertiary">partout avec vous.</span>
+                    </h1>
+                    <p class="text-xl text-blue-100 mb-10 max-w-lg">
+                        Ma Carte modernise l'identification pour les étudiants et le personnel. Sécurisé, pratique et toujours accessible.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <button class="bg-transparent border-2 border-white text-white px-8 py-3 rounded-xl font-bold hover:bg-white hover:text-slate-900 transition">
+                            En savoir plus
+                        </button>
+                    </div>
+                </div>
+                <div class="hidden lg:block relative">
+                    <!-- Mockup placeholder -->
+                    <div class="w-64 h-[500px] bg-gray-900 rounded-[3rem] border-8 border-gray-800 shadow-2xl mx-auto relative overflow-hidden">
+                        <div class="absolute top-0 w-full h-6 bg-gray-800 flex justify-center items-end pb-1">
+                            <div class="w-16 h-1 bg-gray-700 rounded-full"></div>
+                        </div>
+                        <div class="p-4 pt-10">
+                            <div class="w-full h-40 bg-primary/20 rounded-xl mb-4 flex items-center justify-center">
+                                <i class="fas fa-user-circle text-5xl text-primary/40"></i>
+                            </div>
+                            <div class="h-4 w-3/4 bg-gray-200 rounded mb-2"></div>
+                            <div class="h-4 w-1/2 bg-gray-200 rounded mb-6"></div>
+                            <div class="space-y-3">
+                                <div class="h-10 w-full bg-secondaryContainer rounded-lg"></div>
+                                <div class="h-10 w-full bg-gray-100 rounded-lg"></div>
+                                <div class="h-10 w-full bg-gray-100 rounded-lg"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Decorative circles -->
+                    <div class="absolute -top-20 -right-20 w-64 h-64 bg-tertiary/20 rounded-full blur-3xl"></div>
+                    <div class="absolute -bottom-20 -left-20 w-64 h-64 bg-primary/30 rounded-full blur-3xl"></div>
+                </div>
+            </div>
         </div>
-    `;
+    </header>
 
-    container.appendChild(card);
-});
+    <!-- Features Section -->
+    <section id="features" class="py-24 bg-surface">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-20">
+                <h2 class="text-3xl lg:text-4xl font-bold text-primary mb-4">Ce que nous proposons</h2>
+                <div class="w-20 h-1 bg-tertiary mx-auto"></div>
+                <p class="mt-4 text-gray-600 max-w-2xl mx-auto">Une solution complète pour la gestion de l'identité numérique académique.</p>
+            </div>
 
-</script>
+            <div class="grid md:grid-cols-3 gap-12">
+                <!-- Students -->
+                <div class="p-8 bg-background rounded-2xl hover:shadow-xl transition duration-300 border border-gray-100">
+                    <div class="w-14 h-14 bg-primaryContainer text-primary rounded-xl flex items-center justify-center mb-6">
+                        <i class="fas fa-user-graduate text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Pour les Étudiants</h3>
+                    <p class="text-gray-600">Accédez à votre carte d'étudiant numérique instantanément. Plus besoin de s'inquiéter de perdre sa carte physique.</p>
+                </div>
 
+                <!-- Staff -->
+                <div class="p-8 bg-background rounded-2xl hover:shadow-xl transition duration-300 border border-gray-100">
+                    <div class="w-14 h-14 bg-secondaryContainer text-secondary rounded-xl flex items-center justify-center mb-6">
+                        <i class="fas fa-user-tie text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Pour le Personnel</h3>
+                    <p class="text-gray-600">Une identification professionnelle sécurisée pour tout le personnel administratif et enseignant.</p>
+                </div>
+
+                <!-- Schools -->
+                <div class="p-8 bg-background rounded-2xl hover:shadow-xl transition duration-300 border border-gray-100">
+                    <div class="w-14 h-14 bg-blue-100 text-tertiary rounded-xl flex items-center justify-center mb-6">
+                        <i class="fas fa-school text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Pour les Établissements</h3>
+                    <p class="text-gray-600">Gérez efficacement les structures, les départements et les cartes de votre institution via une plateforme centralisée.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Overview -->
+    <section id="about" class="py-24 hero-gradient text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col lg:flex-row items-center gap-16">
+                <div class="lg:w-1/2">
+                    <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Students collaborating" class="rounded-3xl shadow-2xl">
+                </div>
+                <div class="lg:w-1/2">
+                    <h2 class="text-3xl font-bold mb-6">Simplifiez la gestion académique</h2>
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle mt-1 mr-3 text-tertiary"></i>
+                            <span>Vérification instantanée via QR Code</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle mt-1 mr-3 text-tertiary"></i>
+                            <span>Gestion des structures et facultés</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle mt-1 mr-3 text-tertiary"></i>
+                            <span>Sécurité des données garantie</span>
+                        </li>
+                    </ul>
+                    <div class="mt-10">
+                        <button class="bg-tertiary text-primary px-8 py-3 rounded-xl font-bold hover:bg-white transition">Découvrir le portail Admin</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact" class="bg-gray-900 text-white py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-12 mb-12">
+                <div class="col-span-2">
+                    <div class="flex items-center mb-6">
+                        <div class="w-8 h-8 bg-primary rounded flex items-center justify-center text-white mr-2">
+                            <i class="fas fa-id-card"></i>
+                        </div>
+                        <span class="text-xl font-bold">Ma Carte</span>
+                    </div>
+                    <p class="text-gray-400 max-w-sm">
+                        La solution d'identification numérique leader en RDC.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-bold mb-6">Liens Rapides</h4>
+                    <ul class="space-y-4 text-gray-400">
+                        <li><a href="#" class="hover:text-tertiary transition">Accueil</a></li>
+                        <li><a href="#features" class="hover:text-tertiary transition">Fonctionnalités</a></li>
+                        <li><a href="#" class="hover:text-tertiary transition">FAQ</a></li>
+                        <li><a href="#" class="hover:text-tertiary transition">Support</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-bold mb-6">Contact</h4>
+                    <ul class="space-y-4 text-gray-400">
+                        <li class="flex items-center"><i class="fas fa-envelope mr-3"></i>contact@macarte.com</li>
+                        <li class="flex items-center"><i class="fas fa-phone mr-3"></i> +257 00 00 00 00</li>
+                        <li class="flex items-center"><i class="fas fa-map-marker-alt mr-3"></i> Bukavu, RDC</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-8 flex flex-col md:row justify-between items-center">
+                <p class="text-gray-500 text-sm mb-4 md:mb-0">&copy; 2025 Ma Carte. Tous droits réservés.</p>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-500 hover:text-white transition text-xl"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="text-gray-500 hover:text-white transition text-xl"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="text-gray-500 hover:text-white transition text-xl"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Basic scroll effect for Navbar
+        window.addEventListener('scroll', function() {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 50) {
+                nav.classList.add('shadow-md');
+            } else {
+                nav.classList.remove('shadow-md');
+            }
+        });
+    </script>
 </body>
 </html>
