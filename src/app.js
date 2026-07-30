@@ -24,7 +24,8 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
-// Static folder for uploads
+// Static folder for uploads and API welcome
+app.use(express.static("public"))
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // Routes
