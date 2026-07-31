@@ -13,6 +13,6 @@ router.post('/bulk', protect, bulkCreateStudents);
 router.route('/:id')
   .get(protect, getStudentById)
   .patch(protect, updateStudent)
-  .delete(protect, adminOnly, deleteStudent);
+  .delete(protect, deleteStudent);
 
 export default router;

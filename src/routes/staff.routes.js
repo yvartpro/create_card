@@ -11,6 +11,6 @@ router.route('/')
 router.route('/:id')
   .get(protect, getStaffById)
   .patch(protect, updateStaff)
-  .delete(protect, adminOnly, deleteStaff);
+  .delete(protect, deleteStaff);
 
 export default router;
