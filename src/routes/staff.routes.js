@@ -1,12 +1,15 @@
 import express from 'express';
-import { createStaff, getStaff, getStaffById, updateStaff, deleteStaff } from '../controllers/staff.controller.js';
-import { protect, adminOnly } from '../middlewares/auth.middleware.js';
+import { createStaff, getStaff, getStaffById, updateStaff, deleteStaff, uploadPhoto } from '../controllers/staff.controller.js';
+import { protect } from '../middlewares/auth.middleware.js';
+import { upload } from '../middlewares/upload.middleware.js';
 
 const router = express.Router();
 
 router.route('/')
   .post(protect, createStaff)
   .get(protect, getStaff);
+
+router.patch('/:id/photo', protect, upload.single('photo'), uploadPhoto);
 
 router.route('/:id')
   .get(protect, getStaffById)

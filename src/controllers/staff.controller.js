@@ -29,6 +29,18 @@ export const updateStaff = async (req, res) => {
   apiResponse(res, 200, 'Staff updated', staff);
 };
 
+export const uploadPhoto = async (req, res) => {
+  if (!req.file) return apiResponse(res, 400, 'No file uploaded');
+
+  const staff = await Staff.findByPk(req.params.id);
+  if (!staff) return apiResponse(res, 404, 'Staff not found');
+
+  const photoUrl = `uploads/profiles/${req.file.filename}`;
+  await staff.update({ photo_url: photoUrl });
+
+  apiResponse(res, 200, 'Photo updated successfully', { photo_url: photoUrl });
+};
+
 export const deleteStaff = async (req, res) => {
   const staff = await Staff.findByPk(req.params.id);
   if (!staff) return apiResponse(res, 404, 'Staff not found');

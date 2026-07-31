@@ -40,6 +40,18 @@ export const updateStudent = async (req, res) => {
   apiResponse(res, 200, 'Student updated', student);
 };
 
+export const uploadPhoto = async (req, res) => {
+  if (!req.file) return apiResponse(res, 400, 'No file uploaded');
+
+  const student = await Student.findByPk(req.params.id);
+  if (!student) return apiResponse(res, 404, 'Student not found');
+
+  const photoUrl = `uploads/profiles/${req.file.filename}`;
+  await student.update({ photo_url: photoUrl });
+
+  apiResponse(res, 200, 'Photo updated successfully', { photo_url: photoUrl });
+};
+
 export const deleteStudent = async (req, res) => {
   const student = await Student.findByPk(req.params.id);
   if (!student) return apiResponse(res, 404, 'Student not found');

@@ -1,6 +1,7 @@
 import express from 'express';
-import { createStudent, getStudents, getStudentById, updateStudent, deleteStudent, bulkCreateStudents } from '../controllers/student.controller.js';
-import { protect, adminOnly } from '../middlewares/auth.middleware.js';
+import { createStudent, getStudents, getStudentById, updateStudent, deleteStudent, bulkCreateStudents, uploadPhoto } from '../controllers/student.controller.js';
+import { protect } from '../middlewares/auth.middleware.js';
+import { upload } from '../middlewares/upload.middleware.js';
 
 const router = express.Router();
 
@@ -9,6 +10,8 @@ router.route('/')
   .get(protect, getStudents);
 
 router.post('/bulk', protect, bulkCreateStudents);
+
+router.patch('/:id/photo', protect, upload.single('photo'), uploadPhoto);
 
 router.route('/:id')
   .get(protect, getStudentById)
