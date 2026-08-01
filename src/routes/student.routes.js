@@ -5,13 +5,13 @@ import { upload } from '../middlewares/upload.middleware.js';
 
 const router = express.Router();
 
+router.post('/:id/photo', protect, upload.single('photo'), uploadPhoto);
+
 router.route('/')
   .post(protect, createStudent)
   .get(protect, getStudents);
 
 router.post('/bulk', protect, bulkCreateStudents);
-
-router.patch('/:id/photo', protect, upload.single('photo'), uploadPhoto);
 
 router.route('/:id')
   .get(protect, getStudentById)
