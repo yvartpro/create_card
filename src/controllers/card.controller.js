@@ -8,6 +8,15 @@ import { generateCardPDF } from '../services/pdf/card.service.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+const getFileBuffer = (relativePath) => {
+  if (!relativePath) return null;
+  const filePath = path.join(__dirname, '../../', relativePath);
+  if (fs.existsSync(filePath)) {
+    return fs.readFileSync(filePath);
+  }
+  return null;
+};
+
 export const generateCard = async (req, res) => {
   const { type, student_id, staff_id, school_id } = req.body;
 
@@ -23,6 +32,10 @@ export const generateCard = async (req, res) => {
     type,
     schoolName: school.name,
     schoolCode: school.code,
+    schoolLogo: getFileBuffer(school.logo_url),
+    schoolStamp: getFileBuffer(school.stamp_url),
+    principalStamp: getFileBuffer(school.principal_stamp_url),
+    signature: getFileBuffer(school.signature_url),
   };
 
   if (type === 'student') {
@@ -38,7 +51,9 @@ export const generateCard = async (req, res) => {
       lastName: entity.last_name,
       studentNumber: entity.student_number,
       className: entity.class?.name,
-      // photoBuffer/stampBuffer logic could be handled if URLs are local or HTTP
+      gender: entity.gender,
+      birthDate: entity.birth_date,
+      photoBuffer: getFileBuffer(entity.photo_url)
     };
   } else {
     entity = await Staff.findByPk(staff_id);
@@ -49,7 +64,9 @@ export const generateCard = async (req, res) => {
       id: entity.id,
       firstName: entity.first_name,
       lastName: entity.last_name,
-      function: entity.function
+      function: entity.function,
+      gender: entity.gender,
+      photoBuffer: getFileBuffer(entity.photo_url)
     };
   }
 
@@ -78,7 +95,6 @@ export const generateCard = async (req, res) => {
       printed_at: null
     });
 
-    // Return the response
     apiResponse(res, 201, 'Card generated successfully', card);
   } catch (error) {
     console.error(error);

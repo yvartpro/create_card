@@ -5,7 +5,7 @@ import { upload } from '../middlewares/upload.middleware.js';
 
 const router = express.Router();
 
-router.post('/:id/photo', protect, upload.single('photo'), uploadPhoto);
+router.patch('/:id/photo', protect, upload.single('photo'), uploadPhoto);
 
 router.route('/')
   .post(protect, createStaff)
