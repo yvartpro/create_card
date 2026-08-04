@@ -1,115 +1,138 @@
 import PDFDocument from 'pdfkit';
 import { generateQRCode } from '../../utils/qr.js';
 
+const primaryColor = '#0B3C6F';
+const secondaryColor = '#3A7DBA';
+
+const drawCard = async (doc, data, pageNumber = 1) => {
+  // Main Card Border & Background
+  doc.rect(40, 40, 250, 140).fillColor('white').stroke(primaryColor).lineWidth(1.2).fillAndStroke();
+
+  // Header Bar
+  doc.rect(40, 40, 250, 30).fill(primaryColor);
+  doc.fillColor('white').font('Helvetica-Bold').fontSize(10).text(data.schoolName?.toUpperCase() || 'ÉCOLE NON DÉFINIE', 45, 52, {
+    width: 240,
+    align: 'center'
+  });
+
+  if (pageNumber === 1) {
+    // --- RECTO (Front) ---
+    doc.fillColor(primaryColor).font('Helvetica-Bold').fontSize(7).text('RECTO', 42, 32);
+
+    // Photo Section
+    const photoX = 55;
+    const photoY = 78;
+    const photoW = 55;
+    const photoH = 65;
+
+    doc.rect(photoX, photoY, photoW, photoH).stroke('#cccccc').lineWidth(0.5);
+    if (data.photoBuffer) {
+      try {
+        doc.image(data.photoBuffer, photoX + 1, photoY + 1, { width: photoW - 2, height: photoH - 2 });
+      } catch (e) {
+        doc.fillColor('#cccccc').fontSize(6).text('ERR PHOTO', photoX, photoY + 25, { align: 'center', width: photoW });
+      }
+    } else {
+      doc.fillColor('#cccccc').fontSize(6).text('PHOTO', photoX, photoY + 25, { align: 'center', width: photoW });
+    }
+
+    // Details Section
+    const detailsX = 120;
+    let detailsY = 80;
+
+    const addDetail = (label, value) => {
+      if (!value && label !== 'NOM:') return; // Skip if empty, but always show name
+      doc.fillColor(primaryColor).font('Helvetica-Bold').fontSize(7).text(label, detailsX, detailsY);
+      doc.fillColor('#111827').font('Helvetica').fontSize(8).text(value || 'N/A', detailsX + 50, detailsY);
+      detailsY += 14;
+    };
+
+    if (data.type === 'student') {
+      addDetail('NOM:', data.lastName);
+      addDetail('PRÉNOM:', data.firstName);
+      addDetail('CLASSE:', data.className);
+      addDetail('MATRICULE:', data.studentNumber);
+    } else {
+      addDetail('NOM:', data.lastName);
+      addDetail('PRÉNOM:', data.firstName);
+      addDetail('FONCTION:', data.function);
+      addDetail('GENRE:', data.gender === 'M' ? 'MASCULIN' : 'FÉMININ');
+    }
+
+    // QR Code
+    try {
+      const identifier = data.type === 'student' ? data.studentNumber : `STAFF-${data.id}`;
+      const qrData = JSON.stringify({ id: data.id, num: identifier, sch: data.schoolCode, type: data.type });
+      const qrBuffer = await generateQRCode(qrData);
+      doc.image(qrBuffer, 240, 130, { width: 35, height: 35 });
+    } catch (e) {}
+
+  } else {
+    // --- VERSO (Back) ---
+    doc.fillColor(primaryColor).font('Helvetica-Bold').fontSize(7).text('VERSO', 42, 32);
+
+    // School Logo (Top right of content area)
+    if (data.schoolLogo) {
+      try {
+        doc.image(data.schoolLogo, 230, 75, { fit: [35, 35] });
+      } catch (e) {}
+    }
+
+    // Conditions
+    doc.fillColor('#374151').font('Helvetica-Bold').fontSize(7).text('CONDITIONS D\'UTILISATION', 55, 78);
+    doc.font('Helvetica').fontSize(6).fillColor('#4B5563').text(
+      '1. Cette carte est strictement personnelle.\n2. En cas de perte, avisez l\'administration.\n3. Tout usage frauduleux est passible de sanctions.',
+      55, 88, { width: 150 }
+    );
+
+    // Validity
+    const year = new Date().getFullYear();
+    doc.fillColor(primaryColor).font('Helvetica-Bold').fontSize(7).text(`ANNÉE SCOLAIRE: ${year}-${year + 1}`, 55, 115);
+
+    // Authority Section
+    doc.fillColor('#111827').font('Helvetica-Bold').fontSize(7).text('LE DIRECTEUR', 180, 115, { align: 'center', width: 100 });
+
+    // Signature & Stamp (placed under "LE DIRECTEUR")
+    if (data.signature) {
+      try {
+        doc.image(data.signature, 195, 122, { width: 40 });
+      } catch (e) {}
+    }
+    if (data.schoolStamp) {
+      try {
+        doc.image(data.schoolStamp, 210, 118, { width: 35 });
+      } catch (e) {}
+    }
+
+    // Principal/Admin Stamp if separate
+    if (data.principalStamp) {
+        try {
+          doc.image(data.principalStamp, 185, 118, { width: 30 });
+        } catch (e) {}
+    }
+  }
+
+  // Bottom Accent Bar
+  doc.rect(40, 172, 250, 8).fill(secondaryColor);
+  doc.fillColor('white').fontSize(5).text('MA CARTE - NM ACADEMIA', 40, 174, { width: 250, align: 'center' });
+};
+
 export const generateCardPDF = async (data) => {
   return new Promise(async (resolve, reject) => {
     try {
-      // Standard CR80 ID Card size (85.6mm x 54mm) in points: 242.64 x 153
-      // Orientation: Landscape
-      const doc = new PDFDocument({
-        size: [242.64, 153],
-        margins: { top: 0, left: 0, right: 0, bottom: 0 }
-      });
-
+      const doc = new PDFDocument({ size: [330, 220], margin: 0 });
       const buffers = [];
+
       doc.on('data', buffers.push.bind(buffers));
       doc.on('end', () => resolve(Buffer.concat(buffers)));
       doc.on('error', reject);
 
-      // --- PAGE 1: RECTO (Front) ---
-      
-      // Header Background
-      doc.rect(0, 0, 242.64, 35).fill('#0f4c81');
+      // Page 1: Recto
+      await drawCard(doc, data, 1);
 
-      // "REPUBLIQUE"
-      doc.fillColor('#ffffff').fontSize(6).text('REPUBLIQUE DEMOCRATIQUE DU CONGO', 0, 5, { align: 'center', width: 242.64 });
-
-      // School Name in Header
-      doc.fillColor('#ffffff').fontSize(9).font('Helvetica-Bold').text(data.schoolName?.toUpperCase() || 'ÉCOLE NON DÉFINIE', 0, 15, { align: 'center', width: 242.64 });
-
-      // Photo Section (Left)
-      const photoX = 15;
-      const photoY = 45;
-      const photoW = 60;
-      const photoH = 75;
-
-      doc.rect(photoX, photoY, photoW, photoH).stroke('#0f4c81');
-      if (data.photoBuffer) {
-        doc.image(data.photoBuffer, photoX + 1, photoY + 1, { width: photoW - 2, height: photoH - 2 });
-      } else {
-        doc.fillColor('#cccccc').fontSize(7).text('PAS DE PHOTO', photoX, photoY + 30, { align: 'center', width: photoW });
-      }
-
-      // Details Section (Right)
-      const detailsX = 85;
-      const detailsY = 45;
-
-      doc.fillColor('#0f4c81').fontSize(7).font('Helvetica-Bold').text('NOM:', detailsX, detailsY);
-      doc.fillColor('#000000').fontSize(8).font('Helvetica').text(`${data.lastName} ${data.firstName}`, detailsX + 30, detailsY);
-
-      doc.fillColor('#0f4c81').fontSize(7).font('Helvetica-Bold').text('CLASSE:', detailsX, detailsY + 15);
-      doc.fillColor('#000000').fontSize(8).font('Helvetica').text(data.className || 'N/A', detailsX + 35, detailsY + 15);
-
-      doc.fillColor('#0f4c81').fontSize(7).font('Helvetica-Bold').text('SEXE:', detailsX, detailsY + 30);
-      doc.fillColor('#000000').fontSize(8).font('Helvetica').text(data.gender === 'M' ? 'MASCULIN' : 'FÉMININ', detailsX + 30, detailsY + 30);
-
-      doc.fillColor('#0f4c81').fontSize(7).font('Helvetica-Bold').text('MATRICULE:', detailsX, detailsY + 45);
-      doc.fillColor('#000000').fontSize(8).font('Helvetica').text(data.studentNumber || 'N/A', detailsX + 45, detailsY + 45);
-
-      // QR Code (Bottom Right)
-      const qrData = JSON.stringify({
-        id: data.id,
-        num: data.studentNumber,
-        sch: data.schoolCode
-      });
-      const qrBuffer = await generateQRCode(qrData);
-      doc.image(qrBuffer, 190, 95, { width: 40, height: 40 });
-
-      // Footer line
-      doc.rect(0, 143, 242.64, 10).fill('#0f4c81');
-      doc.fillColor('#ffffff').fontSize(5).text('CARTE D\'IDENTITÉ SCOLAIRE', 0, 145, { align: 'center', width: 242.64 });
-
-      // --- PAGE 2: VERSO (Back) ---
-      doc.addPage({
-        size: [242.64, 153],
-        margins: { top: 0, left: 0, right: 0, bottom: 0 }
-      });
-
-      // Background decorative element
-      doc.rect(0, 0, 242.64, 153).fill('#f9f9f9');
-      doc.rect(0, 0, 242.64, 10).fill('#0f4c81');
-
-      // School Logo (Center small)
-      if (data.schoolLogo) {
-          doc.image(data.schoolLogo, 106, 20, { width: 30 });
-      }
-
-      // Information text
-      doc.fillColor('#333333').fontSize(7).font('Helvetica-Bold').text('CONDITIONS D\'UTILISATION', 15, 30);
-      doc.font('Helvetica').fontSize(6).text('1. Cette carte est strictement personnelle.\n2. En cas de perte, veuillez informer l\'administration de l\'école.\n3. Tout usage frauduleux expose son auteur à des sanctions.', 15, 45, { width: 150 });
-
-      // Validity
-      const currentYear = new Date().getFullYear();
-      doc.fillColor('#0f4c81').fontSize(7).font('Helvetica-Bold').text(`ANNÉE SCOLAIRE: ${currentYear}-${currentYear+1}`, 15, 80);
-
-      // Signature & Stamp Section
-      doc.fillColor('#000000').fontSize(7).font('Helvetica-Bold').text('LE DIRECTEUR', 150, 80, { align: 'center', width: 80 });
-
-      // Signature placeholder
-      if (data.signature) {
-          doc.image(data.signature, 160, 90, { width: 60 });
-      }
-
-      // Stamp placeholder
-      if (data.schoolStamp) {
-          doc.image(data.schoolStamp, 170, 85, { width: 50 });
-      }
-
-      // Contact or Address
-      doc.fillColor('#666666').fontSize(6).text('Contact: contact@nmacademia.bi | www.nmacademia.bi', 0, 135, { align: 'center', width: 242.64 });
-
-      // Final Footer
-      doc.rect(0, 143, 242.64, 10).fill('#0f4c81');
+      // Page 2: Verso
+      doc.addPage({ size: [330, 220], margin: 0 });
+      await drawCard(doc, data, 2);
 
       doc.end();
     } catch (error) {
